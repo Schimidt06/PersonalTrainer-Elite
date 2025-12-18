@@ -1,0 +1,7 @@
+{
+  "name": "Elite Personal Training",
+  "description": "A high-end, luxury landing page for a premium personal trainer, featuring sophisticated design and an AI-powered initial consultation preview.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
