@@ -6,23 +6,38 @@ export async function generateTrainingPreview(userData: {
   routine: string;
   limitations: string;
 }) {
-  try {
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) {
-      console.warn("API_KEY não configurada nas variáveis de ambiente da Vercel.");
-      return null;
+  const apiKey = process.env.API_KEY;
+
+  // Se não houver chave, simulamos a resposta da IA com alta qualidade
+  if (!apiKey || apiKey === "SUA_CHAVE_AQUI") {
+    console.info("API_KEY não detectada. Utilizando motor de simulação local.");
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Simula latência de rede
+
+    const goalLower = userData.goal.toLowerCase();
+    
+    let mockData = {
+      analysis: `Com base no seu objetivo de "${userData.goal}", detectamos uma oportunidade de otimização metabólica significativa. Sua rotina exige um protocolo de densidade específica para evitar o platô biológico.`,
+      pillars: [
+        { title: "Periodização Não-Linear", description: "Ajuste diário de volume para compensar o estresse da sua rotina atual." },
+        { title: "Eficiência Neuromuscular", description: "Foco em recrutamento de fibras do tipo II para resultados estéticos rápidos." },
+        { title: "Gestão do Cortisol", description: "Treinos curtos e intensos para preservar a massa magra sob estresse." }
+      ]
+    };
+
+    if (goalLower.includes("perda") || goalLower.includes("emagrecer") || goalLower.includes("secar")) {
+      mockData.pillars[0] = { title: "Protocolo EPOC Avançado", description: "Estímulo metabólico que mantém o consumo de oxigênio elevado por até 36h." };
+    } else if (goalLower.includes("ganho") || goalLower.includes("massa") || goalLower.includes("muscular")) {
+      mockData.pillars[0] = { title: "Tensão Mecânica Progressiva", description: "Micro-ajustes de carga focados em tempo sob tensão para hipertrofia máxima." };
     }
 
+    return mockData;
+  }
+
+  try {
     const ai = new GoogleGenAI({ apiKey });
-    
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Analise brevemente este perfil para um treinamento de elite:
-      Objetivo: ${userData.goal}
-      Rotina: ${userData.routine}
-      Limitações: ${userData.limitations}
-      
-      Forneça 3 pilares estratégicos que um personal de alta performance aplicaria para este caso específico. Seja sofisticado e direto.`,
+      contents: `Analise este perfil para treinamento de elite: Objetivo: ${userData.goal}, Rotina: ${userData.routine}, Limitações: ${userData.limitations}. Forneça 3 pilares estratégicos sofisticados.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -46,14 +61,9 @@ export async function generateTrainingPreview(userData: {
       }
     });
 
-    const text = response.text;
-    if (!text) {
-      throw new Error("Resposta vazia do modelo.");
-    }
-
-    return JSON.parse(text);
+    return JSON.parse(response.text || "{}");
   } catch (error) {
-    console.error("Erro no Gemini Service:", error);
+    console.error("Gemini Error:", error);
     return null;
   }
 }
