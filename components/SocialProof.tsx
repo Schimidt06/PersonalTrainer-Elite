@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TESTIMONIALS } from '../constants';
-import { useScrollReveal } from '../hooks/useScrollReveal';
+import { TESTIMONIALS } from '../constants.tsx';
+import { useScrollReveal } from '../hooks/useScrollReveal.ts';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 const SocialProof: React.FC = () => {
@@ -81,7 +81,7 @@ const SocialProof: React.FC = () => {
             </div>
           </div>
 
-          {/* Navigation Arrows - Adjusted for better mobile reach */}
+          {/* Navigation Arrows */}
           <div className="absolute inset-y-0 left-0 lg:-left-16 flex items-center">
             <button 
               onClick={prevSlide}

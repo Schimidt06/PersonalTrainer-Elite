@@ -1,8 +1,8 @@
 
 import React, { useState, useRef } from 'react';
 import { Send, User, Calendar, Ruler, Weight, Target, AlertCircle, Cpu, Loader2, CheckCircle2, ArrowRight } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { generateTrainingPreview } from '../services/geminiService';
+import { useScrollReveal } from '../hooks/useScrollReveal.ts';
+import { generateTrainingPreview } from '../services/geminiService.ts';
 
 interface AIResult {
   analysis: string;

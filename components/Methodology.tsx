@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Target, Calendar, Award, TrendingUp } from 'lucide-react';
-import { METHOD_STEPS } from '../constants';
-import { useScrollReveal } from '../hooks/useScrollReveal';
+import { METHOD_STEPS } from '../constants.tsx';
+import { useScrollReveal } from '../hooks/useScrollReveal.ts';
 
 const iconMap = {
   Target: <Target className="w-8 h-8 text-[#d4af37]" />,

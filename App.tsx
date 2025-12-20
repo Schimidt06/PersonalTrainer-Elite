@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
-import Hero from './components/Hero';
-import PremiumPositioning from './components/PremiumPositioning';
-import Qualify from './components/Qualify';
-import Methodology from './components/Methodology';
-import StrategicRoadmap from './components/StrategicRoadmap';
-import SocialProof from './components/SocialProof';
-import Exclusivity from './components/Exclusivity';
-import ApplicationAI from './components/ApplicationAI';
-import FAQ from './components/FAQ';
+import Hero from './components/Hero.tsx';
+import PremiumPositioning from './components/PremiumPositioning.tsx';
+import Qualify from './components/Qualify.tsx';
+import Methodology from './components/Methodology.tsx';
+import StrategicRoadmap from './components/StrategicRoadmap.tsx';
+import SocialProof from './components/SocialProof.tsx';
+import Exclusivity from './components/Exclusivity.tsx';
+import ApplicationAI from './components/ApplicationAI.tsx';
+import FAQ from './components/FAQ.tsx';
 import { Instagram, Linkedin, Mail, Menu, X, ChevronUp } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -73,7 +73,7 @@ const App: React.FC = () => {
         style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
       />
 
-      {/* Floating Particles - Reduced for performance */}
+      {/* Floating Particles */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-10">
         {[...Array(6)].map((_, i) => (
           <div 

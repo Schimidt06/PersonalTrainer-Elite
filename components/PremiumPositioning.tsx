@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ShieldCheck, UserCheck, BarChart4, Lock } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useScrollReveal } from '../hooks/useScrollReveal.ts';
 
 const PremiumPositioning: React.FC = () => {
   const containerRef = useScrollReveal();
