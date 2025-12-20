@@ -9,12 +9,13 @@ import SocialProof from './components/SocialProof';
 import Exclusivity from './components/Exclusivity';
 import ApplicationAI from './components/ApplicationAI';
 import FAQ from './components/FAQ';
-import { Instagram, Linkedin, Mail, Phone, Send, Menu, X } from 'lucide-react';
+import { Instagram, Linkedin, Mail, Menu, X, ChevronUp } from 'lucide-react';
 
 const App: React.FC = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,18 +23,26 @@ const App: React.FC = () => {
     };
 
     const handleMouseOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).tagName === 'BUTTON' || (e.target as HTMLElement).tagName === 'A') {
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a')) {
         setIsHovering(true);
       } else {
         setIsHovering(false);
       }
     };
 
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 1000);
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('scroll', handleScroll);
+    
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -47,13 +56,9 @@ const App: React.FC = () => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
-        top: offsetPosition,
+        top: elementPosition - offset,
         behavior: 'smooth'
       });
       setIsMenuOpen(false);
@@ -61,167 +66,145 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen selection:bg-gold selection:text-black bg-zinc-950 overflow-x-hidden">
-      {/* 3D Custom Cursor - Hidden on Touch Devices */}
+    <div className="min-h-screen selection:bg-gold selection:text-black bg-zinc-950">
+      {/* 3D Custom Cursor - LG only */}
       <div 
-        className={`custom-cursor hidden lg:block ${isHovering ? 'scale-[2.5] bg-gold/10' : ''}`}
+        className={`custom-cursor ${isHovering ? 'scale-[2.5] bg-gold/10' : ''}`}
         style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
       />
 
-      {/* Background 3D Particles Simulation - Reduced for mobile performance */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
-        {[...Array(10)].map((_, i) => (
+      {/* Floating Particles - Reduced for performance */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-10">
+        {[...Array(6)].map((_, i) => (
           <div 
             key={i}
-            className="absolute rounded-full bg-gold/30 blur-xl animate-float"
+            className="absolute rounded-full bg-gold blur-[100px] animate-float"
             style={{
-              width: `${Math.random() * 80 + 40}px`,
-              height: `${Math.random() * 80 + 40}px`,
+              width: `${Math.random() * 200 + 100}px`,
+              height: `${Math.random() * 200 + 100}px`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 10 + 10}s`
+              animationDuration: `${Math.random() * 15 + 10}s`
             }}
           />
         ))}
       </div>
 
-      {/* Sticky Navigation */}
-      <nav className="fixed top-0 left-0 w-full z-50 border-b border-zinc-800/50 backdrop-blur-lg bg-black/80">
-        <div className="container mx-auto px-6 py-4 lg:py-5 flex items-center justify-between">
+      {/* Header */}
+      <nav className="fixed top-0 left-0 w-full z-[100] border-b border-zinc-800/50 backdrop-blur-xl bg-black/70">
+        <div className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <button 
             onClick={scrollToTop}
-            className="text-xl lg:text-2xl font-serif font-bold tracking-tighter uppercase cursor-pointer hover:opacity-80 transition-opacity"
+            className="text-xl sm:text-2xl font-serif font-bold tracking-tighter uppercase text-white"
           >
             Elite <span className="text-gold">PT</span>
           </button>
           
-          {/* Desktop Nav */}
-          <div className="hidden md:flex gap-8 lg:gap-10 text-[10px] lg:text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-            <a href="#method" onClick={(e) => scrollToSection(e, 'method')} className="hover:text-gold transition-colors py-2 border-b border-transparent hover:border-gold/30">Método</a>
-            <a href="#apply" onClick={(e) => scrollToSection(e, 'apply')} className="hover:text-gold transition-colors py-2 border-b border-transparent hover:border-gold/30">Aplicação</a>
-            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-gold transition-colors py-2 border-b border-transparent hover:border-gold/30">Contato</a>
+          <div className="hidden lg:flex gap-10 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+            <a href="#sobre" onClick={(e) => scrollToSection(e, 'sobre')} className="hover:text-gold transition-colors">Conceito</a>
+            <a href="#method" onClick={(e) => scrollToSection(e, 'method')} className="hover:text-gold transition-colors">Método</a>
+            <a href="#apply" onClick={(e) => scrollToSection(e, 'apply')} className="hover:text-gold transition-colors">Aplicação</a>
+            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="hover:text-gold transition-colors">Contato</a>
           </div>
           
           <div className="flex items-center gap-4">
             <button 
               onClick={(e) => scrollToSection(e, 'apply')}
-              className="hidden sm:block px-5 lg:px-6 py-2.5 lg:py-3 bg-gold text-black text-[9px] lg:text-[10px] font-black rounded-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-gold/5"
+              className="hidden sm:block px-6 py-2.5 bg-gold text-black text-[10px] font-black rounded-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all"
             >
-              Começar Agora
+              Consultoria
             </button>
-            
-            {/* Mobile Menu Toggle */}
             <button 
-              className="md:hidden p-2 text-zinc-400 hover:text-gold"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-zinc-400 hover:text-gold"
+              onClick={() => setIsMenuOpen(true)}
             >
-              {isMenuOpen ? <X /> : <Menu />}
+              <Menu />
             </button>
-          </div>
-        </div>
-
-        {/* Mobile Nav Overlay */}
-        <div className={`fixed inset-0 bg-zinc-950 z-[60] transition-transform duration-500 md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="flex flex-col h-full p-8">
-            <div className="flex justify-between items-center mb-16">
-              <span className="text-2xl font-serif font-bold uppercase">Elite <span className="text-gold">PT</span></span>
-              <button onClick={() => setIsMenuOpen(false)} className="p-2"><X className="w-8 h-8" /></button>
-            </div>
-            <div className="flex flex-col gap-8 text-xl font-bold uppercase tracking-[0.2em]">
-              <a href="#method" onClick={(e) => scrollToSection(e, 'method')} className="text-zinc-400 hover:text-gold">Método</a>
-              <a href="#depoimentos" onClick={(e) => scrollToSection(e, 'depoimentos')} className="text-zinc-400 hover:text-gold">Resultados</a>
-              <a href="#apply" onClick={(e) => scrollToSection(e, 'apply')} className="text-zinc-400 hover:text-gold">Aplicação</a>
-              <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="text-zinc-400 hover:text-gold">Contato</a>
-            </div>
-            <div className="mt-auto pb-12">
-              <button 
-                onClick={(e) => scrollToSection(e, 'apply')}
-                className="w-full py-5 bg-gold text-black font-black uppercase tracking-widest text-xs"
-              >
-                Solicitar Vaga
-              </button>
-            </div>
           </div>
         </div>
       </nav>
 
-      <main className="relative z-10 pt-16">
-        <section id="home"><Hero /></section>
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-0 z-[110] bg-zinc-950 transition-transform duration-500 lg:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col h-full p-8">
+          <div className="flex justify-between items-center mb-12">
+            <span className="text-2xl font-serif font-bold">Elite <span className="text-gold">PT</span></span>
+            <button onClick={() => setIsMenuOpen(false)} className="p-2"><X className="w-8 h-8" /></button>
+          </div>
+          <div className="flex flex-col gap-8 text-2xl font-serif">
+            <a href="#sobre" onClick={(e) => scrollToSection(e, 'sobre')} className="text-zinc-200">O Conceito</a>
+            <a href="#method" onClick={(e) => scrollToSection(e, 'method')} className="text-zinc-200">Metodologia</a>
+            <a href="#apply" onClick={(e) => scrollToSection(e, 'apply')} className="text-zinc-200">Aplicação</a>
+            <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')} className="text-zinc-200">Contato</a>
+          </div>
+          <div className="mt-auto">
+            <button 
+              onClick={(e) => scrollToSection(e, 'apply')}
+              className="w-full py-5 bg-gold text-black font-black uppercase tracking-widest text-xs"
+            >
+              Iniciar Consultoria
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <main className="relative z-10">
+        <Hero />
         <section id="sobre"><PremiumPositioning /></section>
         <Qualify />
         <section id="method"><Methodology /></section>
         <StrategicRoadmap />
         <section id="depoimentos"><SocialProof /></section>
-        <section id="exclusivo"><Exclusivity /></section>
+        <Exclusivity />
         <section id="apply"><ApplicationAI /></section>
-        <section id="faq"><FAQ /></section>
+        <FAQ />
       </main>
 
-      <footer id="contact" className="bg-zinc-950 pt-24 pb-12 border-t border-zinc-900 relative z-10">
+      {/* Scroll Top Button */}
+      <button 
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 z-50 p-4 bg-zinc-900 border border-zinc-800 rounded-full text-gold transition-all duration-300 shadow-2xl ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}
+      >
+        <ChevronUp />
+      </button>
+
+      <footer id="contact" className="bg-zinc-950 pt-24 pb-12 border-t border-zinc-900">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 mb-24">
-            <div className="max-w-xs mx-auto md:mx-0 text-center md:text-left">
-              <div className="text-3xl font-serif font-bold tracking-tighter uppercase mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+            <div className="lg:col-span-2">
+              <div className="text-3xl font-serif font-bold uppercase mb-6">
                 Elite <span className="text-gold">PT</span>
               </div>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-8">
-                Transformação física personalizada para quem exige o mais alto nível de performance, privacidade e exclusividade.
+              <p className="text-zinc-500 text-sm max-w-md leading-relaxed">
+                Referência em treinamento personalizado de luxo. Unindo ciência biomecânica e acompanhamento estratégico para resultados definitivos.
               </p>
-              <div className="flex justify-center md:justify-start gap-4">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-3 border border-zinc-800 rounded-full hover:border-gold transition-all text-zinc-500 hover:text-gold">
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-3 border border-zinc-800 rounded-full hover:border-gold transition-all text-zinc-500 hover:text-gold">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="mailto:contato@elitept.com.br" className="p-3 border border-zinc-800 rounded-full hover:border-gold transition-all text-zinc-500 hover:text-gold">
-                  <Mail className="w-5 h-5" />
-                </a>
-              </div>
             </div>
             
-            <div className="grid grid-cols-2 md:col-span-2 md:grid-cols-3 gap-8">
-              <div className="col-span-1">
-                <h4 className="font-bold mb-6 text-zinc-100 uppercase text-xs tracking-widest">Navegação</h4>
-                <ul className="space-y-4 text-sm text-zinc-500">
-                  <li><button onClick={scrollToTop} className="hover:text-gold transition-colors">Topo</button></li>
-                  <li><button onClick={(e) => scrollToSection(e, 'method')} className="hover:text-gold transition-colors text-left">Método</button></li>
-                  <li><button onClick={(e) => scrollToSection(e, 'apply')} className="hover:text-gold transition-colors text-left">Aplicação</button></li>
-                </ul>
+            <div>
+              <h4 className="font-bold mb-6 text-zinc-100 uppercase text-xs tracking-widest">Navegação</h4>
+              <ul className="space-y-4 text-sm text-zinc-500">
+                <li><button onClick={(e) => scrollToSection(e, 'home')} className="hover:text-gold transition-colors">Início</button></li>
+                <li><button onClick={(e) => scrollToSection(e, 'method')} className="hover:text-gold transition-colors">Método</button></li>
+                <li><button onClick={(e) => scrollToSection(e, 'apply')} className="hover:text-gold transition-colors">Aplicação</button></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold mb-6 text-zinc-100 uppercase text-xs tracking-widest">Contato</h4>
+              <div className="flex gap-4 mb-6">
+                <a href="#" className="text-zinc-500 hover:text-gold transition-colors"><Instagram /></a>
+                <a href="#" className="text-zinc-500 hover:text-gold transition-colors"><Linkedin /></a>
+                <a href="#" className="text-zinc-500 hover:text-gold transition-colors"><Mail /></a>
               </div>
-              <div className="col-span-1">
-                <h4 className="font-bold mb-6 text-zinc-100 uppercase text-xs tracking-widest">Suporte</h4>
-                <ul className="space-y-4 text-sm text-zinc-500">
-                  <li><button onClick={(e) => scrollToSection(e, 'faq')} className="hover:text-gold transition-colors text-left">FAQ</button></li>
-                  <li><a href="mailto:suporte@elitept.com.br" className="hover:text-gold transition-colors">Canal Aluno</a></li>
-                </ul>
-              </div>
-              <div className="col-span-2 md:col-span-1">
-                <h4 className="font-bold mb-6 text-zinc-100 uppercase text-xs tracking-widest">Atendimento</h4>
-                <p className="text-sm text-zinc-500 leading-relaxed italic">
-                  Presencial em SP e Online Global.
-                </p>
-                <p className="text-sm text-gold font-medium mt-2">contato@elitept.com.br</p>
-              </div>
+              <p className="text-xs text-zinc-600 uppercase tracking-widest">São Paulo | Global Online</p>
             </div>
           </div>
-          
-          <div className="pt-8 border-t border-zinc-900 text-center text-[9px] text-zinc-700 uppercase tracking-[0.3em]">
-            <p>&copy; {new Date().getFullYear()} Elite Personal Training. Design de Excelência.</p>
+          <div className="pt-8 border-t border-zinc-900 text-center text-[10px] text-zinc-700 uppercase tracking-[0.4em]">
+            &copy; {new Date().getFullYear()} Elite Personal Training. All rights reserved.
           </div>
         </div>
       </footer>
-
-      {/* Mobile Floating Action Button */}
-      <div className="fixed bottom-6 right-6 z-40 md:hidden">
-         <button 
-            onClick={(e) => scrollToSection(e, 'apply')}
-            className="w-14 h-14 flex items-center justify-center bg-gold text-black rounded-full shadow-2xl shadow-gold/20 animate-bounce"
-          >
-            <Send className="w-6 h-6" />
-          </button>
-      </div>
     </div>
   );
 };

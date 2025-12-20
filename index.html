@@ -3,19 +3,27 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Elite Personal Training | Excelência em Performance</title>
+    <meta name="description" content="Treinamento personalizado de alta performance para executivos e atletas que buscam exclusividade e resultados reais.">
+    
+    <!-- Tailwind and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --gold: #d4af37;
+        }
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
             background-color: #09090b;
+            overflow-x: hidden;
         }
         h1, h2, h3, .font-serif {
-            font-family: 'Playfair+Display', serif;
+            font-family: 'Playfair Display', serif;
         }
         .gold-gradient {
             background: linear-gradient(135deg, #d4af37 0%, #f9f295 50%, #d4af37 100%);
@@ -30,47 +38,40 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transform-style: preserve-3d;
-            perspective: 1000px;
         }
 
-        /* 3D Interactivity Utils */
-        .tilt-container {
-            perspective: 1000px;
-            transform-style: preserve-3d;
-        }
-        .tilt-card {
-            transition: transform 0.1s ease-out;
-        }
-        .tilt-card:hover {
-            transform: translateZ(20px);
-        }
-        .preserve-3d {
-            transform-style: preserve-3d;
+        /* Responsive Utilities */
+        @media (max-width: 1024px) {
+            .custom-cursor { display: none !important; }
+            .tilt-card { transform: none !important; }
         }
 
         /* Custom Cursor */
         .custom-cursor {
             width: 20px;
             height: 20px;
-            border: 2px solid #d4af37;
+            border: 2px solid var(--gold);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
             transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
             transform: translate(-50%, -50%);
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .custom-cursor { display: block; }
         }
 
-        /* Floating Animation */
+        /* Animations */
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate3d(1, 1, 1, 0deg); }
-            50% { transform: translateY(-20px) rotate3d(1, 1, 1, 2deg); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         .animate-float {
             animation: float 6s ease-in-out infinite;
         }
 
-        /* 3D Scanner Line */
         @keyframes scan {
             0% { top: 0%; opacity: 0; }
             50% { opacity: 1; }
@@ -80,52 +81,47 @@
             position: absolute;
             width: 100%;
             height: 2px;
-            background: linear-gradient(to right, transparent, #d4af37, transparent);
-            box-shadow: 0 0 15px #d4af37;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            box-shadow: 0 0 15px var(--gold);
             animation: scan 3s linear infinite;
             z-index: 20;
         }
 
-        /* Offset para o cabeçalho fixo */
-        [id] {
-            scroll-margin-top: 100px;
-        }
-
-        /* Scroll Reveal Animations */
+        /* Scroll Reveal */
         .reveal {
             opacity: 0;
-            transform: translateY(30px) rotateX(10deg);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reveal.active {
             opacity: 1;
-            transform: translateY(0) rotateX(0deg);
+            transform: translateY(0);
         }
         
         .reveal-left {
             opacity: 0;
-            transform: translateX(-30px) rotateY(-10deg);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateX(-20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reveal-left.active {
             opacity: 1;
-            transform: translateX(0) rotateY(0deg);
+            transform: translateX(0);
         }
 
         .reveal-right {
             opacity: 0;
-            transform: translateX(30px) rotateY(10deg);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateX(20px);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .reveal-right.active {
             opacity: 1;
-            transform: translateX(0) rotateY(0deg);
+            transform: translateX(0);
         }
 
+        /* Stagger Delays */
         .stagger-delay-1 { transition-delay: 100ms; }
         .stagger-delay-2 { transition-delay: 200ms; }
         .stagger-delay-3 { transition-delay: 300ms; }
-        .stagger-delay-4 { transition-delay: 400ms; }
     </style>
 <script type="importmap">
 {

@@ -20,69 +20,61 @@ const Hero: React.FC = () => {
     setTilt({ x: x * 10, y: y * -10 });
   };
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
   return (
-    <section className="relative min-h-[90vh] lg:h-screen flex items-center justify-center overflow-hidden perspective-1000">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div 
-        className={`absolute inset-0 z-0 bg-cover bg-center transition-transform duration-[3s] ${active ? 'scale-105' : 'scale-100'}`}
+        className={`absolute inset-0 z-0 bg-cover bg-center transition-transform duration-[4s] ${active ? 'scale-110' : 'scale-100'}`}
         style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=2070&auto=format&fit=crop)' }}
       >
-        <div className="absolute inset-0 bg-black/70 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/80 lg:bg-black/60 bg-gradient-to-b from-zinc-950/20 via-transparent to-zinc-950"></div>
       </div>
 
       <div 
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onMouseLeave={() => setTilt({ x: 0, y: 0 })}
         style={{ 
-          transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+          transform: window.innerWidth > 1024 ? `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)` : 'none',
           transition: 'transform 0.1s ease-out'
         }}
-        className="container mx-auto px-6 relative z-10 text-center max-w-5xl preserve-3d py-20 lg:py-0"
+        className="container mx-auto px-6 relative z-10 text-center max-w-4xl pt-20"
       >
         <span 
-          className={`inline-block px-4 py-1 mb-6 border border-zinc-700 bg-zinc-900/50 text-zinc-400 text-[10px] lg:text-sm tracking-widest uppercase rounded-full transition-all duration-1000 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
-          style={{ transform: 'translateZ(50px)' }}
+          className={`inline-block px-4 py-1.5 mb-8 border border-gold/30 bg-gold/5 text-gold text-[10px] lg:text-xs tracking-[0.3em] uppercase rounded-full transition-all duration-1000 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}
         >
-          Metodologia Exclusiva
+          Consultoria de Alto Padrão
         </span>
         <h1 
-          className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-6 lg:mb-8 leading-tight transition-all duration-1000 delay-300 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          style={{ transform: 'translateZ(100px)' }}
+          className={`text-4xl sm:text-5xl lg:text-7xl font-bold mb-8 leading-[1.1] text-white transition-all duration-1000 delay-300 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          Transformação física personalizada para quem <span className="gold-gradient">exige excelência</span>
+          A ciência do movimento para <span className="gold-gradient">corpos de elite.</span>
         </h1>
         <p 
-          className={`text-base lg:text-xl text-zinc-400 mb-8 lg:mb-10 max-w-2xl mx-auto font-light leading-relaxed transition-all duration-1000 delay-500 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          style={{ transform: 'translateZ(70px)' }}
+          className={`text-base lg:text-xl text-zinc-400 mb-12 max-w-2xl mx-auto font-light leading-relaxed transition-all duration-1000 delay-500 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          Atendimento individual, metodologia baseada em ciência e resultados mensuráveis para sua melhor versão.
+          Metodologia individualizada para quem não se contenta com o básico. Sua melhor versão exige precisão.
         </p>
         <div 
-          className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-1000 delay-700 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          style={{ transform: 'translateZ(80px)' }}
+          className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-700 transform ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <a 
             href="#apply" 
-            className="px-6 lg:px-8 py-3.5 lg:py-4 bg-gold hover:opacity-90 transition-all text-black text-sm lg:text-base font-semibold rounded-sm flex items-center justify-center gap-2 group shadow-xl shadow-gold/10"
+            className="w-full sm:w-auto px-10 py-5 bg-gold text-black text-sm font-black rounded-sm flex items-center justify-center gap-3 uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-gold/20"
           >
-            Aplicar Agora
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            Aplicar Vaga
+            <ArrowRight className="w-4 h-4" />
           </a>
           <a 
             href="#method" 
-            className="px-6 lg:px-8 py-3.5 lg:py-4 border border-zinc-700 hover:bg-zinc-800 transition-all text-white text-sm lg:text-base font-semibold rounded-sm backdrop-blur-sm"
+            className="w-full sm:w-auto px-10 py-5 border border-zinc-700 hover:bg-zinc-800 text-white text-sm font-bold rounded-sm backdrop-blur-md transition-all"
           >
-            Conhecer Método
+            Ver Método
           </a>
         </div>
       </div>
       
-      <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-1000 delay-1000 hidden lg:block ${active ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="w-px h-12 bg-gradient-to-b from-zinc-700 to-transparent animate-bounce"></div>
+      <div className={`absolute bottom-10 left-1/2 -translate-x-1/2 transition-opacity duration-1000 delay-1000 hidden md:block ${active ? 'opacity-60' : 'opacity-0'}`}>
+        <div className="w-px h-16 bg-gradient-to-b from-gold to-transparent animate-pulse"></div>
       </div>
     </section>
   );
