@@ -3,8 +3,9 @@
   "name": "personal-trainer-elite",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -12,11 +13,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "lucide-react": "^0.460.0",
-    "@google/genai": "^0.1.2",
+    "@google/genai": "^0.2.1",
     "three": "^0.182.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "typescript": "^5.7.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.182.0",
