@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Target, Calendar, Award, TrendingUp } from 'lucide-react';
 import { METHOD_STEPS } from '../constants';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -31,7 +31,7 @@ const Methodology: React.FC = () => {
   const containerRef = useScrollReveal();
 
   return (
-    <section ref={containerRef as any} className="py-24 bg-zinc-900/50 overflow-hidden">
+    <section ref={containerRef as any} id="method" className="py-24 bg-zinc-900/50 overflow-hidden">
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           <div className="reveal-left">
@@ -40,7 +40,7 @@ const Methodology: React.FC = () => {
               Minha metodologia não se baseia em suposições. Utilizamos ciência biomecânica e análise de dados para projetar o caminho mais eficiente para a sua evolução física.
             </p>
           </div>
-          <div className="h-[400px] lg:h-[500px] reveal-right">
+          <div className="h-[400px] lg:h-[500px] reveal-right bg-zinc-950/50 rounded-3xl border border-zinc-800 overflow-hidden shadow-2xl">
             <BiomechanicalModel />
           </div>
         </div>

@@ -6,45 +6,53 @@ export async function generateTrainingPreview(userData: {
   routine: string;
   limitations: string;
 }) {
-  // Acesso seguro ao process.env para evitar crash em browsers puros
-  const getApiKey = () => {
+  const getSafeApiKey = () => {
     try {
-      return process.env.API_KEY;
-    } catch (e) {
-      return undefined;
+      // Uso de optional chaining para evitar crash se process.env não existir
+      return (window as any).process?.env?.API_KEY || "";
+    } catch {
+      return "";
     }
   };
 
-  const apiKey = getApiKey();
+  const apiKey = getSafeApiKey();
 
-  // Simulação local caso a chave não esteja presente ou seja o valor padrão
-  if (!apiKey || apiKey === "SUA_CHAVE_AQUI" || apiKey === "") {
-    console.info("Simulando análise de performance...");
-    await new Promise(resolve => setTimeout(resolve, 1500));
+  // FALLBACK: Simulação elegante se não houver chave
+  if (!apiKey || apiKey === "SUA_CHAVE_AQUI") {
+    console.warn("API_KEY não detectada. Ativando modo de simulação Elite.");
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const goalLower = userData.goal.toLowerCase();
-    
-    let mockData = {
-      analysis: `Protocolo identificado para "${userData.goal}". Sua rotina executiva demanda um ajuste fino de densidade metabólica para evitar o estresse oxidativo excessivo.`,
+    const goal = userData.goal.toLowerCase();
+    const isHypertrophy = goal.includes("ganho") || goal.includes("massa") || goal.includes("hipertrofia");
+
+    return {
+      analysis: `Protocolo estratificado para "${userData.goal}". Identificamos uma necessidade de ajuste na curva de cortisol matinal devido à sua rotina. Recomendamos foco em densidade metabólica.`,
       pillars: [
-        { title: "Densidade Progressiva", description: "Foco em intervalos de descanso curtos para otimizar a queima calórica pós-treino." },
-        { title: "Neuro-Recrutamento", description: "Técnicas de pré-exaustão para garantir ativação total mesmo com cargas moderadas." },
-        { title: "Recuperação Ativa", description: "Estratégias de mobilidade diária para neutralizar os efeitos da postura sentada." }
+        { 
+          title: isHypertrophy ? "Tensão Mecânica" : "Eficiência Lipídica", 
+          description: isHypertrophy 
+            ? "Foco em microlesões controladas com tempo de sob tensão (TUT) estendido." 
+            : "Protocolos de cardio de baixa intensidade para otimização da oxidação de gordura."
+        },
+        { 
+          title: "Ajuste Biomecânico", 
+          description: "Correção de padrões posturais decorrentes da rotina de escritório para evitar sobrecarga lombar." 
+        },
+        { 
+          title: "Gestão de Recovery", 
+          description: "Implementação de higiene do sono e mobilidade ativa para acelerar a síntese proteica." 
+        }
       ]
     };
-
-    if (goalLower.includes("ganho") || goalLower.includes("massa")) {
-      mockData.pillars[0] = { title: "Hipertrofia Miofibrilar", description: "Estímulo de alta tensão mecânica focado em microlesões controladas." };
-    }
-
-    return mockData;
   }
 
   try {
     const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Analise para treinamento de elite: Objetivo: ${userData.goal}, Rotina: ${userData.routine}, Limitações: ${userData.limitations}. Retorne análise e 3 pilares técnicos.`,
+      contents: `Analise o perfil para treino de personal trainer de luxo: 
+      Objetivo: ${userData.goal}, Rotina: ${userData.routine}, Limitações: ${userData.limitations}. 
+      Retorne uma análise curta e 3 pilares técnicos fundamentais em JSON.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -70,7 +78,7 @@ export async function generateTrainingPreview(userData: {
 
     return JSON.parse(response.text || "{}");
   } catch (error) {
-    console.error("Erro na chamada Gemini:", error);
+    console.error("Erro na inteligência artificial:", error);
     return null;
   }
 }
