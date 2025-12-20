@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { Target, Calendar, Award, TrendingUp } from 'lucide-react';
-import { METHOD_STEPS } from '../constants.tsx';
-import { useScrollReveal } from '../hooks/useScrollReveal.ts';
+import { METHOD_STEPS } from '../constants';
+import { useScrollReveal } from '../hooks/useScrollReveal';
+import BiomechanicalModel from './BiomechanicalModel';
 
 const iconMap = {
   Target: <Target className="w-8 h-8 text-[#d4af37]" />,
@@ -12,37 +13,16 @@ const iconMap = {
 };
 
 const MethodologyCard: React.FC<{ step: any, index: number }> = ({ step, index }) => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - left) / width - 0.5;
-    const y = (e.clientY - top) / height - 0.5;
-    setTilt({ x: x * 15, y: y * -15 });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
-
   return (
-    <div 
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ 
-        transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
-        transition: 'transform 0.1s ease-out'
-      }}
-      className={`relative p-8 glass-card rounded-xl group hover:border-gold transition-all reveal stagger-delay-${index + 1} preserve-3d`}
-    >
-      <div className="absolute top-0 right-0 p-4 text-4xl font-serif font-bold text-zinc-800" style={{ transform: 'translateZ(20px)' }}>
+    <div className={`relative p-8 glass-card rounded-xl group hover:border-gold transition-all reveal stagger-delay-${index + 1}`}>
+      <div className="absolute top-0 right-0 p-4 text-4xl font-serif font-bold text-zinc-800">
         0{index + 1}
       </div>
-      <div className="mb-6" style={{ transform: 'translateZ(40px)' }}>
+      <div className="mb-6">
         {iconMap[step.icon as keyof typeof iconMap]}
       </div>
-      <h3 className="text-xl font-bold mb-4" style={{ transform: 'translateZ(50px)' }}>{step.title}</h3>
-      <p className="text-zinc-500 text-sm leading-relaxed" style={{ transform: 'translateZ(30px)' }}>{step.description}</p>
+      <h3 className="text-xl font-bold mb-4">{step.title}</h3>
+      <p className="text-zinc-500 text-sm leading-relaxed">{step.description}</p>
     </div>
   );
 };
@@ -53,14 +33,19 @@ const Methodology: React.FC = () => {
   return (
     <section ref={containerRef as any} className="py-24 bg-zinc-900/50 overflow-hidden">
       <div className="container mx-auto px-6 max-w-6xl">
-        <div className="text-center mb-20 reveal">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Método de Alta Precisão</h2>
-          <p className="text-zinc-500 max-w-2xl mx-auto">
-            Não é apenas sobre levantar pesos. É sobre uma arquitetura de treinamento projetada para se encaixar na sua vida e potencializar sua biologia.
-          </p>
+        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+          <div className="reveal-left">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Engenharia do Corpo</h2>
+            <p className="text-zinc-400 text-lg font-light leading-relaxed">
+              Minha metodologia não se baseia em suposições. Utilizamos ciência biomecânica e análise de dados para projetar o caminho mais eficiente para a sua evolução física.
+            </p>
+          </div>
+          <div className="h-[400px] lg:h-[500px] reveal-right">
+            <BiomechanicalModel />
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-8 perspective-1000">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {METHOD_STEPS.map((step, i) => (
             <MethodologyCard key={i} step={step} index={i} />
           ))}

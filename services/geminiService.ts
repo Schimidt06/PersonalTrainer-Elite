@@ -6,28 +6,35 @@ export async function generateTrainingPreview(userData: {
   routine: string;
   limitations: string;
 }) {
-  const apiKey = process.env.API_KEY;
+  // Acesso seguro ao process.env para evitar crash em browsers puros
+  const getApiKey = () => {
+    try {
+      return process.env.API_KEY;
+    } catch (e) {
+      return undefined;
+    }
+  };
 
-  // Se não houver chave, simulamos a resposta da IA com alta qualidade
-  if (!apiKey || apiKey === "SUA_CHAVE_AQUI") {
-    console.info("API_KEY não detectada. Utilizando motor de simulação local.");
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Simula latência de rede
+  const apiKey = getApiKey();
+
+  // Simulação local caso a chave não esteja presente ou seja o valor padrão
+  if (!apiKey || apiKey === "SUA_CHAVE_AQUI" || apiKey === "") {
+    console.info("Simulando análise de performance...");
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const goalLower = userData.goal.toLowerCase();
     
     let mockData = {
-      analysis: `Com base no seu objetivo de "${userData.goal}", detectamos uma oportunidade de otimização metabólica significativa. Sua rotina exige um protocolo de densidade específica para evitar o platô biológico.`,
+      analysis: `Protocolo identificado para "${userData.goal}". Sua rotina executiva demanda um ajuste fino de densidade metabólica para evitar o estresse oxidativo excessivo.`,
       pillars: [
-        { title: "Periodização Não-Linear", description: "Ajuste diário de volume para compensar o estresse da sua rotina atual." },
-        { title: "Eficiência Neuromuscular", description: "Foco em recrutamento de fibras do tipo II para resultados estéticos rápidos." },
-        { title: "Gestão do Cortisol", description: "Treinos curtos e intensos para preservar a massa magra sob estresse." }
+        { title: "Densidade Progressiva", description: "Foco em intervalos de descanso curtos para otimizar a queima calórica pós-treino." },
+        { title: "Neuro-Recrutamento", description: "Técnicas de pré-exaustão para garantir ativação total mesmo com cargas moderadas." },
+        { title: "Recuperação Ativa", description: "Estratégias de mobilidade diária para neutralizar os efeitos da postura sentada." }
       ]
     };
 
-    if (goalLower.includes("perda") || goalLower.includes("emagrecer") || goalLower.includes("secar")) {
-      mockData.pillars[0] = { title: "Protocolo EPOC Avançado", description: "Estímulo metabólico que mantém o consumo de oxigênio elevado por até 36h." };
-    } else if (goalLower.includes("ganho") || goalLower.includes("massa") || goalLower.includes("muscular")) {
-      mockData.pillars[0] = { title: "Tensão Mecânica Progressiva", description: "Micro-ajustes de carga focados em tempo sob tensão para hipertrofia máxima." };
+    if (goalLower.includes("ganho") || goalLower.includes("massa")) {
+      mockData.pillars[0] = { title: "Hipertrofia Miofibrilar", description: "Estímulo de alta tensão mecânica focado em microlesões controladas." };
     }
 
     return mockData;
@@ -37,7 +44,7 @@ export async function generateTrainingPreview(userData: {
     const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Analise este perfil para treinamento de elite: Objetivo: ${userData.goal}, Rotina: ${userData.routine}, Limitações: ${userData.limitations}. Forneça 3 pilares estratégicos sofisticados.`,
+      contents: `Analise para treinamento de elite: Objetivo: ${userData.goal}, Rotina: ${userData.routine}, Limitações: ${userData.limitations}. Retorne análise e 3 pilares técnicos.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -63,7 +70,7 @@ export async function generateTrainingPreview(userData: {
 
     return JSON.parse(response.text || "{}");
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Erro na chamada Gemini:", error);
     return null;
   }
 }

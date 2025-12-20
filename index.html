@@ -7,6 +7,11 @@
     <title>Elite Personal Training | Excelência em Performance</title>
     <meta name="description" content="Treinamento personalizado de alta performance para executivos e atletas que buscam exclusividade e resultados reais.">
     
+    <!-- Script de Compatibilidade para process.env -->
+    <script>
+      window.process = { env: { API_KEY: "" } };
+    </script>
+
     <!-- Tailwind and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -42,13 +47,10 @@
             transform-style: preserve-3d;
         }
 
-        /* Responsive Utilities */
         @media (max-width: 1024px) {
             .custom-cursor { display: none !important; }
-            .tilt-card { transform: none !important; }
         }
 
-        /* Custom Cursor */
         .custom-cursor {
             width: 20px;
             height: 20px;
@@ -65,7 +67,6 @@
             .custom-cursor { display: block; }
         }
 
-        /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
@@ -74,7 +75,6 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        /* Scroll Reveal */
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -113,6 +113,7 @@
     {
       "imports": {
         "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
         "lucide-react": "https://esm.sh/lucide-react@0.460.0",
         "@google/genai": "https://esm.sh/@google/genai@0.1.2",
         "react/": "https://esm.sh/react@19.0.0/",
