@@ -7,7 +7,7 @@
     <title>Elite Personal Training | Excelência em Performance</title>
     <meta name="description" content="Treinamento personalizado de alta performance para executivos e profissionais que buscam resultados reais.">
     
-    <!-- Segurança contra erro de process.env -->
+    <!-- Segurança contra erro de process.env no navegador -->
     <script>
       if (typeof window !== 'undefined') {
         window.process = window.process || { env: { API_KEY: "" } };
@@ -77,7 +77,7 @@
 </head>
 <body>
     <div id="root"></div>
-    <!-- No Vite, o caminho deve ser relativo ao root -->
+    <!-- O Vite gerencia os módulos automaticamente. Não use importmaps aqui. -->
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
