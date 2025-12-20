@@ -7,10 +7,9 @@ export async function generateTrainingPreview(userData: {
   limitations: string;
 }) {
   try {
-    // Inicializa dentro da função para garantir que process.env esteja disponível
     const apiKey = process.env.API_KEY;
     if (!apiKey) {
-      console.warn("API_KEY não encontrada. Verifique as variáveis de ambiente.");
+      console.warn("API_KEY não configurada nas variáveis de ambiente da Vercel.");
       return null;
     }
 
@@ -47,14 +46,14 @@ export async function generateTrainingPreview(userData: {
       }
     });
 
-    const jsonStr = response.text?.trim();
-    if (!jsonStr) {
-      throw new Error("Model returned empty or invalid text.");
+    const text = response.text;
+    if (!text) {
+      throw new Error("Resposta vazia do modelo.");
     }
 
-    return JSON.parse(jsonStr);
+    return JSON.parse(text);
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Erro no Gemini Service:", error);
     return null;
   }
 }
