@@ -1,16 +1,21 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Initialize the client once with the API key from environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export async function generateTrainingPreview(userData: {
   goal: string;
   routine: string;
   limitations: string;
 }) {
   try {
-    // Generate content using the recommended model for complex text tasks.
+    // Inicializa dentro da função para garantir que process.env esteja disponível
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      console.warn("API_KEY não encontrada. Verifique as variáveis de ambiente.");
+      return null;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+    
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Analise brevemente este perfil para um treinamento de elite:
@@ -42,7 +47,6 @@ export async function generateTrainingPreview(userData: {
       }
     });
 
-    // Access the .text property directly (not as a method) as per guidelines.
     const jsonStr = response.text?.trim();
     if (!jsonStr) {
       throw new Error("Model returned empty or invalid text.");
